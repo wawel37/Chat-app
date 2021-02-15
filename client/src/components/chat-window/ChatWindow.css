@@ -1,0 +1,29 @@
+.chatWindow{
+    display: block;
+    border: 1px solid black;
+    width: 90%;
+    margin: auto;
+    margin-top: 5%;
+    padding: 3%;
+}
+.postsWindow{
+    display: block;
+    height: 800px;
+    overflow-y: scroll;
+    scroll-behavior: smooth;
+    padding: 1% 0% 1% 0;
+}
+form{
+    width: 90%;
+    margin: auto;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+.textInput{
+    flex: 20 0 0;
+    margin-right: 1%;
+}
+.submit{
+    flex: 1 0 0;
+}

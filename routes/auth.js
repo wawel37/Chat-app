@@ -7,6 +7,7 @@ const {registerValidation, loginValidation } = require('../validators/user');
 const jwt = require('jsonwebtoken');
 
 
+
 //REGISTER
 router.post('/register', async (req, res) => {
     //VALIDATION: TODO
@@ -15,11 +16,13 @@ router.post('/register', async (req, res) => {
         return res.status(400).json({error: validationError.details[0].message});
     }
     
-    //Checking if user with that email exists;
+    //Checking if the user with that email exists;
     const user = await User.findOne({email: req.body.email});
     if(user) return res.status(400).json({error: 'User with this email already exists'});
 
-    User.findOne({email: req.email})
+    //Checking if the user with the nickname exists
+    const userNick = await User.findOne({name: req.body.name});
+    if(userNick) return res.status(400).json({error: 'User with this nickname already exists'});
     
     //Hashing and sending it to database
     async.waterfall([
@@ -68,13 +71,6 @@ router.post('/login', async (req,res) => {
     //Creating the JWT token
     const token = jwt.sign({_id: user._id}, process.env.JWT_SECRET);
     res.header('JWT', token).send(user);
-
-
-
-
-
-
-
 
 });
 

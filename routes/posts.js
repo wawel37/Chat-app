@@ -1,6 +1,7 @@
 const router = require('express').Router();
 const Post = require('../models/post');
 const async = require('async');
+const jwtVerification = require('../middleWares/jwtVerification');
 
 //GETTING ALL POSTS 
 router.get('/', (req, res, next) =>{

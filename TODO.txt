@@ -1,0 +1,1 @@
+1. Zrobic autentykacje na czacie dla danych uzytkownikow

@@ -10,7 +10,6 @@ export function ChatWindow(props){
 
     const [posts, setPosts] = useState([]);
     const [message, setMessage] = useState('');
-    const myRef = React.useRef(null);
 
     const getPosts = () =>{
         fetch('/posts')
@@ -24,29 +23,37 @@ export function ChatWindow(props){
     }
     
     useEffect(() => {
-        console.log('fetching');
         getPosts();
+
         const socket = socketIOClient('/');
         socket.on('update posts', (data) => {
             setPosts(data);
-            //fsdfsd
         });
     }, []);
 
     function sendPost(e){
         e.preventDefault();
+
         setMessage('');
+
+        const user = JSON.parse(localStorage.getItem('user'));
+        let userName = 'none';
+        if(user){
+            userName = user.data.name;
+        }
+
         const toSend = {
-            title: "user",
+            title: userName,
             body: message
         };
+
         socketIOClient('/').emit('send post', toSend);
     }
 
     return (
         <div className="chatWindow">
     
-            <div ref={myRef} className="postsWindow">
+            <div className="postsWindow">
                 {posts.map((post, i) => {
                     return <ChatMessage post={post} key={i}/>
                 }

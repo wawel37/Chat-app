@@ -8,11 +8,13 @@ function socketConnection(io){
         //When someone sends the post he also gets posts update with the new post
         //TODO caching
         socket.on('send post', (data) => {
+
             const post = new Post({
                 title: data.title,
                 body: data.body,
                 date: data.data
             });
+            
             async.series({
                 post: function(callback){
                     post.save(callback);

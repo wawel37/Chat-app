@@ -1,0 +1,18 @@
+.Login{
+    margin-top: 2%;
+}
+.myLabel{
+    width: 100%;
+    text-align: center;
+}
+.myForm{
+    flex-direction: column;
+    min-width: 200px;
+    max-width: 20%;
+}
+.submitButton{
+    margin: auto;
+    margin-top: 5%;
+    width: 50%;
+    
+}

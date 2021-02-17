@@ -10,25 +10,32 @@ export function ChatWindow(props){
 
     const [posts, setPosts] = useState([]);
     const [message, setMessage] = useState('');
+    
 
-    const getPosts = () =>{
-        fetch('/posts')
-        .then(res => res.json())
-        .then((data) => {
-            setPosts(data);
+    
+    useEffect(async () => {
+        let isMounted = true;
+        const token = JSON.parse(localStorage.getItem('jwt'));
+
+
+        axios.get('/posts')
+        .then((res) =>{
+            if(isMounted) setPosts(res.data);
         })
         .catch((err) => {
-            console.log(err);
+            setPosts([]);
+            console.log(err.message);
         })
-    }
-    
-    useEffect(() => {
-        getPosts();
 
-        const socket = socketIOClient('/');
-        socket.on('update posts', (data) => {
-            setPosts(data);
+        const socket = socketIOClient('/', {
+            query: `token=${token}`
         });
+
+        socket.on('update posts', (data) => {
+            if(isMounted) setPosts(data);
+        });
+
+        return () => {isMounted = false};
     }, []);
 
     function sendPost(e){
@@ -52,7 +59,7 @@ export function ChatWindow(props){
 
     return (
         <div className="chatWindow">
-    
+
             <div className="postsWindow">
                 {posts.map((post, i) => {
                     return <ChatMessage post={post} key={i}/>

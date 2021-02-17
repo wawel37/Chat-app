@@ -4,7 +4,7 @@ const async = require('async');
 const jwtVerification = require('../middleWares/jwtVerification');
 
 //GETTING ALL POSTS 
-router.get('/', (req, res, next) =>{
+router.get('/', jwtVerification, (req, res, next) =>{
     async.series({
         findAll: function(callback){
             Post.find({}, callback);

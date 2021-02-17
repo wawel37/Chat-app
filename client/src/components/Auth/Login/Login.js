@@ -37,7 +37,10 @@ export default function Login(){
             console.log(response.data);
 
             alert('Logged successfully!');
+
             localStorage.setItem('user', JSON.stringify(response));
+            localStorage.setItem('jwt', JSON.stringify(response.headers.jwt));
+
             setRedirect('/');
         }catch(err){
             alert(err.response.data.error);

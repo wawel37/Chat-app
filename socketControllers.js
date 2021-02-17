@@ -1,13 +1,13 @@
 const Post = require('./models/post');
 const async = require('async');
 
-
 function socketConnection(io){
     io.on('connection', (socket) =>{
 
         //When someone sends the post he also gets posts update with the new post
         //TODO caching
         socket.on('send post', (data) => {
+            console.log('dostlame posta');
 
             const post = new Post({
                 title: data.title,

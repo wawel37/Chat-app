@@ -3,19 +3,49 @@ import './ChatWindow.css';
 import './chat-message/ChatMessage';
 import { ChatMessage } from './chat-message/ChatMessage';
 import axios from 'axios';
-import socketIOClient, { io } from 'socket.io-client';
+import socketIOClient, { io }  from 'socket.io-client';
 import { useWindowScroll } from 'react-use';
 
 export function ChatWindow(props){
 
     const [posts, setPosts] = useState([]);
     const [message, setMessage] = useState('');
+    const [socket, setSocket] = useState(null);
+
+    function setUpSocket(){
+        const token = JSON.parse(localStorage.getItem('jwt'));
+    
+        if(!socket){
+
+          const tempSocket = io('/', {
+            query: {
+              token: token
+            }
+          });
+    
+          tempSocket.on('disconnect', () => {
+            setSocket(null);
+            console.log('socket set to null, disconnected');
+          });
+    
+          tempSocket.on('connection', () =>{
+            console.log('socket connected');
+          });
+          
+          tempSocket.on('update posts', (data) => {
+            setPosts(data);
+          });
+    
+          setSocket(tempSocket);
+    
+        }
+      }
     
 
     
     useEffect(async () => {
         let isMounted = true;
-        const token = JSON.parse(localStorage.getItem('jwt'));
+        await setUpSocket();
 
 
         axios.get('/posts')
@@ -27,13 +57,7 @@ export function ChatWindow(props){
             console.log(err.message);
         })
 
-        const socket = socketIOClient('/', {
-            query: `token=${token}`
-        });
-
-        socket.on('update posts', (data) => {
-            if(isMounted) setPosts(data);
-        });
+        
 
         return () => {isMounted = false};
     }, []);
@@ -54,7 +78,7 @@ export function ChatWindow(props){
             body: message
         };
 
-        socketIOClient('/').emit('send post', toSend);
+        socket.emit('send post', toSend);
     }
 
     return (

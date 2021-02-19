@@ -1,5 +1,6 @@
 const Post = require('./models/post');
 const async = require('async');
+const socketioJwt = require('socketio-jwt');
 
 function socketConnection(io){
     io.on('connection', (socket) =>{
@@ -31,4 +32,13 @@ function socketConnection(io){
     });
 }
 
+function socketJwtVerification(io){
+
+    io.use(socketioJwt.authorize({
+        secret: process.env.JWT_SECRET,
+        handshake: true
+    }));
+}
+
 exports.socketConnection = socketConnection;
+exports.socketJwtVerification = socketJwtVerification;

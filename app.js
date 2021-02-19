@@ -4,7 +4,7 @@ var mongoose = require('mongoose');
 var bodyParser = require('body-parser');
 var http = require('http');
 var io = require('socket.io');
-var {socketConnection, socketJwtAuthMiddleWare} = require('./socketControllers');
+var {socketConnection, socketJwtVerification} = require('./socketControllers');
 require('dotenv/config');
 
 var app = express();
@@ -36,6 +36,7 @@ app.use('/posts', postsRoute);
 app.use('/auth', authRoute);
 
 //Setting up the socket connection
+socketJwtVerification(io);
 socketConnection(io);
 
 

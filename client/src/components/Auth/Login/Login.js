@@ -42,6 +42,8 @@ export default function Login(){
             localStorage.setItem('jwt', JSON.stringify(response.headers.jwt));
 
             setRedirect('/');
+            window.location.reload();
+            
         }catch(err){
             alert(err.response.data.error);
             return;

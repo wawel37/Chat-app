@@ -1,51 +1,33 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useState, useContext} from 'react';
 import './ChatWindow.css';
 import './chat-message/ChatMessage';
 import { ChatMessage } from './chat-message/ChatMessage';
 import axios from 'axios';
-import socketIOClient, { io }  from 'socket.io-client';
+import socketIOClient, { io, Socket }  from 'socket.io-client';
 import { useWindowScroll } from 'react-use';
+import {SocketContext} from '../../context/socket';
 
 export function ChatWindow(props){
 
+    const contextSocket = useContext(SocketContext);
+    
+
     const [posts, setPosts] = useState([]);
     const [message, setMessage] = useState('');
-    const [socket, setSocket] = useState(null);
+    
+    //Setting up the socket connection with the update post 
+    
+    function setUpSocket(isMounted){
 
-    function setUpSocket(){
-        const token = JSON.parse(localStorage.getItem('jwt'));
-    
-        if(!socket){
+        contextSocket.on('update posts', (data) => {
+            if(isMounted) setPosts(data);
+        });
 
-          const tempSocket = io('/', {
-            query: {
-              token: token
-            }
-          });
-    
-          tempSocket.on('disconnect', () => {
-            setSocket(null);
-            console.log('socket set to null, disconnected');
-          });
-    
-          tempSocket.on('connection', () =>{
-            console.log('socket connected');
-          });
-          
-          tempSocket.on('update posts', (data) => {
-            setPosts(data);
-          });
-    
-          setSocket(tempSocket);
-    
-        }
-      }
-    
-
+    }
     
     useEffect(async () => {
         let isMounted = true;
-        await setUpSocket();
+        setUpSocket(isMounted);
 
 
         axios.get('/posts')
@@ -53,11 +35,9 @@ export function ChatWindow(props){
             if(isMounted) setPosts(res.data);
         })
         .catch((err) => {
-            setPosts([]);
+            if(isMounted) setPosts([]);
             console.log(err.message);
-        })
-
-        
+        });
 
         return () => {isMounted = false};
     }, []);
@@ -78,7 +58,7 @@ export function ChatWindow(props){
             body: message
         };
 
-        socket.emit('send post', toSend);
+        contextSocket.emit('send post', toSend);
     }
 
     return (

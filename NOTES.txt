@@ -1,0 +1,2 @@
+1. przy zmianie komponentu przed zakonczeniem wszystkich async funkcji jest memory leak
+eg. (zanim załaduje sie chatwindow, zmiana powoduje że ustawiony stan postow, gdzie ten komponent nie bedzie juz widoczny)

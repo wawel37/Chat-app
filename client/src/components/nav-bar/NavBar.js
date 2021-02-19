@@ -17,11 +17,13 @@ export default function NavBav(){
         localStorage.setItem('user', null);
         localStorage.setItem('jwt', null);
 
+        
+        window.location.reload();
         setRedirect('/login');
     }
 
     if(redirect){
-        return <Redirect to={redirect}/>
+        return <Redirect sensitive from='/' to={redirect}/>
     }else{
         return(
             <div className="NavBar">

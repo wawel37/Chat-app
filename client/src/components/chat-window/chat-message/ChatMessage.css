@@ -18,3 +18,9 @@ h1{
 .post-body{
     font-size: 12px;
 }
+.mine-post{
+    background: #007bff;
+}
+.mine-post > p, .mine-post > h1{
+    text-align: right;
+}

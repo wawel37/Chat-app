@@ -1,10 +1,8 @@
 .chatWindow{
     display: block;
-    border: 1px solid black;
-    width: 90%;
+    width: 50%;
     margin: auto;
     margin-top: 2%;
-    padding: 3%;
 }
 .postsWindow{
     display: block;

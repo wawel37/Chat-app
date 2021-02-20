@@ -1,10 +1,11 @@
 .NavBar{
     display: block;
-    height: 40px;
+    height: 60px;
     background: #006AFF;
 }
 .custom-btn-toolbar{
     display: inline;
+    justify-content: center;
 }
 .nav-list{
     list-style: none;
@@ -19,4 +20,11 @@ li{
     float: left;
     height: 40px;
     margin-left: 5%;
+}
+.right-panel{
+    float: right;
+}
+button{
+    height: 60px;
+    border-radius: 0;
 }

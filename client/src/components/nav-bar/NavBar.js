@@ -2,15 +2,15 @@ import react, {useState, useEffect} from 'react';
 import './NavBar.css';
 import Button from 'react-bootstrap/Button';
 import {ButtonToolbar, ButtonGroup} from 'react-bootstrap';
-import { Link, Redirect } from 'react-router-dom'
+import { Link, Redirect, useHistory } from 'react-router-dom'
 import Login from '../Auth/Login/Login';
 import Register from '../Auth/Register/Register';
 
 
 
 export default function NavBav(){
+    let history = useHistory();
 
-    const [redirect, setRedirect] = useState(null);
     const [user, setUser] = useState(null);
 
     function logout(){
@@ -20,41 +20,38 @@ export default function NavBav(){
         localStorage.setItem('jwt', null);
 
         alert('Successfully logged out!');
+        
+        history.push('/');
         window.location.reload();
-        setRedirect('/login');
     }
 
     useEffect(() =>{
         setUser(!JSON.parse(localStorage.getItem('user')));
     }, []);
 
-    if(redirect){
-        return <Redirect sensitive from='/' to={redirect}/>
-    }else{
-        return(
-            <div className="NavBar">
-                <nav className="nav-element">
-                    {/* <ButtonToolbar className="custom-btn-toolbar"> */}
+    
+    return(
+        <div className="NavBar">
+            <nav className="nav-element">
 
-                    <ButtonGroup>
-                        <Link to='/'>
-                            <Button variant="dark">Home</Button>
-                        </Link>
-                    </ButtonGroup>
+                <ButtonGroup>
+                    <Link to='/'>
+                        <Button variant="dark">Home</Button>
+                    </Link>
+                </ButtonGroup>
 
-                    <ButtonGroup className="right-panel">
-                        {user && <Link to='/login'>
-                            <Button variant="secondary">Login</Button>
-                        </Link>}
-                        {user && <Link to='/register'>
-                            <Button variant="secondary">Register</Button>
-                        </Link>}
-                        
-                        {!user && <Button varian="secondary" onClick={logout}>Log out</Button>}
-                    </ButtonGroup>
-                    {/* </ButtonToolbar> */}
-                </nav>
-            </div>
-        )
-    }
+                <ButtonGroup className="right-panel">
+                    {user && <Link to='/login'>
+                        <Button variant="secondary">Login</Button>
+                    </Link>}
+                    {user && <Link to='/register'>
+                        <Button variant="secondary">Register</Button>
+                    </Link>}
+                    
+                    {!user && <Button varian="secondary" onClick={logout}>Log out</Button>}
+                </ButtonGroup>
+            </nav>
+        </div>
+    )
+    
 }

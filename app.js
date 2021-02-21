@@ -30,10 +30,12 @@ db.on('error', console.error.bind(console, 'MongoDB connection error: '));
 const postsRoute = require('./routes/posts');
 const indexRoute = require('./routes/index');
 const authRoute = require('./routes/auth');
+const roomRoute = require('./routes/rooms');
 
 app.use('/', indexRoute);
 app.use('/posts', postsRoute);
 app.use('/auth', authRoute);
+app.use('/rooms', roomRoute);
 
 //Setting up the socket connection
 socketJwtVerification(io);

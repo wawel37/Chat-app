@@ -7,7 +7,15 @@ const jwtVerification = require('../middleWares/jwtVerification');
 router.get('/', jwtVerification, (req, res, next) =>{
     async.series({
         findAll: function(callback){
-            Post.find({}, callback);
+            Post.find({})
+            .populate('user')
+            .populate({
+                path: 'room',
+                populate: {
+                    path: 'users'
+                }
+            })
+            .exec(callback);
         } 
     },
     function(err, result){
@@ -24,7 +32,16 @@ router.get('/', jwtVerification, (req, res, next) =>{
 router.get('/:postId', (req, res, next) =>{
     async.series({
         find: function(callback){
-            Post.findById(req.params.postId, callback);
+            Post.findById(req.params.postId)
+            .populate('user')
+            .populate('room')
+            .populate({
+                path: 'room',
+                populate: {
+                    path: 'users'
+                }
+            })
+            .exec(callback);
         }
     },
     function(err, result){
@@ -42,17 +59,20 @@ router.get('/:postId', (req, res, next) =>{
 //POSTING NEW POST
 router.post('/', (req, res, next) =>{
     const post = new Post({
-        title: req.body.title,
+        user: req.body.userId,
         body: req.body.body,
-        date: req.body.date
+        date: req.body.date,
+        room: req.body.roomId
     });
+    //TODO:
+    //Need to check if the user exists and the user belongs to the certain chatroom
     async.series({
         save: function(callback){ //callback here is the function executed after the post.save is done;
             post.save(callback);
         }},
         function(err, result){
             if(err){
-                res.status(404).json(err);
+                res.status(400).json(err);
                 return;
             }
             res.json(result.save);

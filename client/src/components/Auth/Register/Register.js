@@ -2,16 +2,16 @@ import react, {useState, useEffect} from 'react';
 import { Form, Button } from 'react-bootstrap';
 import './Register.css';
 import axios from 'axios';
-import { Redirect } from 'react-router-dom';
+import { Redirect, useHistory } from 'react-router-dom';
 
 
 
 export default function Register(){
+    let history = useHistory();
 
     const [formName, setFormName] = useState('');
     const [formEmail, setFormEmail] = useState('');
     const [formPassword, setFormPassword] = useState('');
-    const [redirect, setRedirect] = useState(null);
 
     async function handleSubmit(e){
         e.preventDefault();
@@ -37,7 +37,8 @@ export default function Register(){
 
             alert('Registration successful, you can now log in!');
 
-            setRedirect('/login');
+            // setRedirect('/login');
+            history.push('/login');
         }catch(err){
             alert(err.response.data.error);
             return;
@@ -48,31 +49,29 @@ export default function Register(){
     }
 
     
-    if(redirect){
-        return <Redirect to={redirect}/>
-    }else{
-        return(
-            <div className="Register">
-                <Form className="myForm" onSubmit={handleSubmit}>
-                    <Form.Group controlId="formName">
-                        <Form.Label className="myLabel">Name</Form.Label>
-                        <Form.Control type="text" value={formName} onChange={(e) => setFormName(e.target.value)}  required />
-                    </Form.Group>
+    
+    return(
+        <div className="Register">
+            <Form className="myForm" onSubmit={handleSubmit}>
+                <Form.Group controlId="formName">
+                    <Form.Label className="myLabel">Name</Form.Label>
+                    <Form.Control type="text" value={formName} onChange={(e) => setFormName(e.target.value)}  required />
+                </Form.Group>
 
-                    <Form.Group controlId="formEmail">
-                        <Form.Label className="myLabel">Email</Form.Label>
-                        <Form.Control type="email" value={formEmail} onChange={(e) => setFormEmail(e.target.value)} required/>
-                    </Form.Group>
+                <Form.Group controlId="formEmail">
+                    <Form.Label className="myLabel">Email</Form.Label>
+                    <Form.Control type="email" value={formEmail} onChange={(e) => setFormEmail(e.target.value)} required/>
+                </Form.Group>
 
-                    <Form.Group controlId="formPassword">
-                        <Form.Label className="myLabel">Password</Form.Label>
-                        <Form.Control type="password" value={formPassword} onChange={(e) => setFormPassword(e.target.value)} required/>
-                    </Form.Group>
-                    <Button className="submitButton" variant="primary" type="submit">
-                        Sign Up
-                    </Button>
-                </Form>
-            </div>
-        )
-    }
+                <Form.Group controlId="formPassword">
+                    <Form.Label className="myLabel">Password</Form.Label>
+                    <Form.Control type="password" value={formPassword} onChange={(e) => setFormPassword(e.target.value)} required/>
+                </Form.Group>
+                <Button className="submitButton" variant="warning" type="submit">
+                    Sign Up
+                </Button>
+            </Form>
+        </div>
+    )
+    
 }

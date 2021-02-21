@@ -1,5 +1,2 @@
-1. Zrobic autentykacje na czacie dla danych uzytkownikow
-2. wiele zakladek, event listener do localstorage change
-3. scorllowanie przy updatcie
-4. routing nie dziala przy wylogowaniu
-5. about page
+1. wiele zakladek, event listener do localstorage change
+2. scorllowanie przy updatcie

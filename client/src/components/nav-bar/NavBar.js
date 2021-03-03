@@ -14,7 +14,7 @@ export default function NavBav(){
     const [user, setUser] = useState(null);
 
     function logout(){
-        if(user) return;
+        if(!user) return;
         console.log('loggin out');
         localStorage.setItem('user', null);
         localStorage.setItem('jwt', null);
@@ -26,7 +26,8 @@ export default function NavBav(){
     }
 
     useEffect(() =>{
-        setUser(!JSON.parse(localStorage.getItem('user')));
+        setUser(JSON.parse(localStorage.getItem('user')));
+        console.log(user);
     }, []);
 
     
@@ -41,14 +42,16 @@ export default function NavBav(){
                 </ButtonGroup>
 
                 <ButtonGroup className="right-panel">
-                    {user && <Link to='/login'>
+                    {!user && <Link to='/login'>
                         <Button variant="secondary">Login</Button>
                     </Link>}
-                    {user && <Link to='/register'>
+                    {!user && <Link to='/register'>
                         <Button variant="secondary">Register</Button>
                     </Link>}
+
+                    {user && <p className="logged-user">You are logged in as: {user.data.name}</p>}
                     
-                    {!user && <Button varian="secondary" onClick={logout}>Log out</Button>}
+                    {user && <Button varian="secondary" onClick={logout}>Log out</Button>}
                 </ButtonGroup>
             </nav>
         </div>

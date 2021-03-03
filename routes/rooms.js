@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const router = require('express').Router();
 const async = require('async');
 
+//GETTING ALL THE ROOMS
 router.get('/', (req, res) =>{
     async.series({
         findAll: function(callback){
@@ -18,6 +19,7 @@ router.get('/', (req, res) =>{
     });
 });
 
+//GETTING ROOM WITH THE SPECIFIC ID
 router.get('/:roomId', (req, res) =>{
     async.series({
         find: function(callback){
@@ -27,12 +29,30 @@ router.get('/:roomId', (req, res) =>{
         }
     }, function(err, result){
         if(err){
-            return res.status(404).json(err);
+            return res.status(400).json(err);
         }
         return res.json(result.find);
     })
 });
 
+//GETTING ALL THE ROOMS THAT THE USER IS ASSOCIATED WITH
+router.get('/user/:userId', (req, res) =>{
+    async.series({
+        find: function(callback){
+            Room.find({
+                users: mongoose.Types.ObjectId(req.params.userId)
+            }).populate('users')
+            .exec(callback);
+        }
+    }, function(err, result){
+        if(err){
+            return res.status(400).json(err);
+        }
+        return res.json(result.find);
+    });
+});
+
+//ADDING A NEW ROOM
 router.post('/', (req, res) =>{
     const room = new Room({
         name: req.body.name,
@@ -52,6 +72,7 @@ router.post('/', (req, res) =>{
     })
 });
 
+//UPDATING EXISTING ROOM WITH DATA
 router.patch('/:roomId', (req, res) =>{
     async.series({
         update: function(callback){

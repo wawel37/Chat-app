@@ -28,3 +28,10 @@ button{
     height: 60px;
     border-radius: 0;
 }
+.logged-user{
+    margin: 0;
+    margin-right: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}

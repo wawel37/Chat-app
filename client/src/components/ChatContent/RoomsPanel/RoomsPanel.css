@@ -1,0 +1,14 @@
+.RoomsPanel{
+    display: flex;
+    flex-direction: column;
+    padding: 0;
+    width: 100%;
+    height: 800px;
+    list-style: none;
+}
+li{
+    margin: 0;
+}
+.redirection-button{
+    width: 100%;
+}

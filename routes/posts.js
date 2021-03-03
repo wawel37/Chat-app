@@ -2,6 +2,7 @@ const router = require('express').Router();
 const Post = require('../models/post');
 const async = require('async');
 const jwtVerification = require('../middleWares/jwtVerification');
+const mongoose = require('mongoose');
 
 //GETTING ALL POSTS 
 router.get('/', jwtVerification, (req, res, next) =>{
@@ -20,7 +21,7 @@ router.get('/', jwtVerification, (req, res, next) =>{
     },
     function(err, result){
         if(err){
-            res.status(404).json(err);
+            res.status(400).json(err);
             return;
         }
         res.json(result.findAll);
@@ -29,7 +30,7 @@ router.get('/', jwtVerification, (req, res, next) =>{
 });
 
 //GETTING SPECIFIC POST BY ID
-router.get('/:postId', (req, res, next) =>{
+router.get('/:postId', jwtVerification, (req, res, next) =>{
     async.series({
         find: function(callback){
             Post.findById(req.params.postId)
@@ -54,6 +55,24 @@ router.get('/:postId', (req, res, next) =>{
         }
         res.json(result.find);
     });
+});
+
+//GETTING ALL THE POST FROM THE GIVEN ROOMID
+router.get('/room/:roomId', (req, res) =>{
+    async.series({
+        find: function(callback){
+            Post.find({
+                room: mongoose.Types.ObjectId(req.params.roomId)
+            }).populate('user')
+            .populate('room')
+            .exec(callback);
+        }
+    }, function(err, result){ 
+        if(err){
+            return res.status(400).json(err);
+        }
+        return res.json(result.find);
+    })
 });
 
 //POSTING NEW POST

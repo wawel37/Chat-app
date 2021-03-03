@@ -13,7 +13,7 @@ function socketConnection(io){
             const post = new Post({
                 title: data.title,
                 body: data.body,
-                date: data.data
+                date: data.date
             });
             
             async.series({

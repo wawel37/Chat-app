@@ -5,11 +5,13 @@ import { ChatMessage } from './chat-message/ChatMessage';
 import axios from 'axios';
 import socketIOClient, { io, Socket }  from 'socket.io-client';
 import { useWindowScroll } from 'react-use';
-import {SocketContext} from '../../context/socket';
+import {SocketContext} from '../../../context/socket';
+import { useParams, withRouter } from 'react-router-dom';
 
-export function ChatWindow(props){
+function ChatWindow(props){
 
     const contextSocket = useContext(SocketContext);
+    const { roomID } = useParams();
     
 
     const [posts, setPosts] = useState([]);
@@ -17,22 +19,23 @@ export function ChatWindow(props){
     
     //Setting up the socket connection with the update post 
     
-    function setUpSocket(isMounted){
+
+    
+    useEffect(() => {
+        let isMounted = true;
 
         contextSocket.on('update posts', (data) => {
             if(isMounted) setPosts(data);
         });
 
-    }
-    
-    useEffect(async () => {
-        let isMounted = true;
-        setUpSocket(isMounted);
+        const queryURL = '/posts/room/' + roomID;
 
 
-        axios.get('/posts')
+
+        axios.get(queryURL)
         .then((res) =>{
             if(isMounted) setPosts(res.data);
+            console.log(posts);
         })
         .catch((err) => {
             if(isMounted) setPosts([]);
@@ -54,8 +57,11 @@ export function ChatWindow(props){
         }
 
         const toSend = {
-            title: userName,
-            body: message
+            user: user,
+            post:{
+                title: userName,
+                body: message
+            }
         };
 
         contextSocket.emit('send post', toSend);
@@ -63,6 +69,7 @@ export function ChatWindow(props){
 
     return (
         <div className="chatWindow">
+            <p>{roomID}</p>
 
             <div className="postsWindow">
                 {posts.map((post, i) => {
@@ -83,3 +90,5 @@ export function ChatWindow(props){
         </div>
     )
 }
+
+export default ChatWindow;

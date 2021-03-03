@@ -1,6 +1,6 @@
 import logo from './logo.svg';
 import './App.css';
-import {ChatWindow} from './components/chat-window/ChatWindow'
+import {ChatWindow} from './components/ChatContent/chat-window/ChatWindow'
 import NavBar from './components/nav-bar/NavBar';
 import Login from './components/Auth/Login/Login';
 import Register from './components/Auth/Register/Register';
@@ -10,6 +10,7 @@ import { useEffect, useState } from 'react';
 import axios from 'axios';
 import io from 'socket.io-client';
 import {SocketContext, getSocket } from './context/socket';
+import { ChatContent } from './components/ChatContent/ChatContent';
 
 function App() {
 
@@ -36,7 +37,7 @@ function App() {
         <Router>
           <NavBar/>
           <Switch>
-            {user && <Route path='/' exact={true} component={ChatWindow}/>}
+            {user && <Route path='/' exact={false} component={ChatContent}/>}
             {!user && <Route path='/' exact={true} component={About}/>}
             <Route path='/login' exact={true} component={Login}/>
             <Route path='/register' exact={true} component={Register}/>

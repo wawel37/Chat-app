@@ -3,7 +3,6 @@ import React from 'react';
 
 export const getSocket = () => {
     const token = JSON.parse(localStorage.getItem('jwt'));
-    console.log('getting my socket');
     if(token){
         return io('/', {
             query: {

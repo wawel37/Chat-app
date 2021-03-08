@@ -26,18 +26,21 @@ router.post('/register', async (req, res) => {
     
     //Hashing and sending it to database
     async.waterfall([
+
         //Generating my salt (secret seed)
         function(callback){
             bcrypt.genSalt(10, (err, result) => {
                 err ? callback(err) : callback(null, result);
             });
         },
+
         //Hashing my password
         function(salt, callback){
             bcrypt.hash(req.body.password, salt, (err, hash) => {
                 err ? callback(err) : callback(null, hash);
             })
         },
+
         //Creating the mongoDB object and sending it to database
         function(hashedPassword, callback){
             const toSend = new User({
@@ -54,6 +57,7 @@ router.post('/register', async (req, res) => {
 
 //LOGIN
 router.post('/login', async (req,res) => {
+    
     //Validation
     const validationError = loginValidation(req.body).error;
     if(validationError){

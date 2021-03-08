@@ -1,4 +1,4 @@
-import React, {useEffect, useState, useContext} from 'react';
+import React, {useEffect, useState, useContext, useRef} from 'react';
 import './ChatWindow.css';
 import './chat-message/ChatMessage';
 import { ChatMessage } from './chat-message/ChatMessage';
@@ -12,7 +12,7 @@ function ChatWindow(props){
 
     const contextSocket = useContext(SocketContext);
     const { roomID } = useParams();
-    
+    const refAnchor = useRef(null);
 
     const [posts, setPosts] = useState([]);
     const [message, setMessage] = useState('');
@@ -25,7 +25,10 @@ function ChatWindow(props){
         let isMounted = true;
 
         contextSocket.on('update posts', (data) => {
-            if(isMounted) setPosts(data);
+            if(isMounted){
+                setPosts(data);
+                refAnchor.current.scrollIntoView();
+            } 
         });
 
         const queryURL = '/posts/room/' + roomID;
@@ -57,11 +60,9 @@ function ChatWindow(props){
         }
 
         const toSend = {
-            user: user,
-            post:{
-                title: userName,
-                body: message
-            }
+            user: user.data,
+            body: message,
+            room: roomID
         };
 
         contextSocket.emit('send post', toSend);
@@ -76,6 +77,7 @@ function ChatWindow(props){
                     return <ChatMessage post={post} key={i}/>
                 }
                 )}
+                <div ref={refAnchor} className="anchor"></div>
             </div>
         
 

@@ -15,11 +15,11 @@ import { ChatContent } from './components/ChatContent/ChatContent';
 function App() {
 
   const [user, setUser] = useState(null);
+
   //Setting the axios up to append JWT token to each header
   axios.interceptors.request.use((request) =>{
     const token = JSON.parse(localStorage.getItem('jwt'));
     request.headers.jwt = token;
-    console.log(request.headers.jwt);
     return request;
   }, (error) =>{
     return error;

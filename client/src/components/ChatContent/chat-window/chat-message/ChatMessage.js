@@ -21,7 +21,7 @@ export function ChatMessage(props){
     return(
         <div className={`chatMessage ${userClass}`}>
             <p className="date">{props.post.date}</p>
-            <h1>{props.post.title}</h1>
+            <h1>{props.post.user.name}</h1>
             <p className="post-body">{props.post.body}</p>
         </div>
     )

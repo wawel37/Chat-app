@@ -6,7 +6,7 @@
 }
 .postsWindow{
     display: block;
-    height: 800px;
+    height: 700px;
     overflow-y: scroll;
     scroll-behavior: smooth;
     padding: 1% 0% 1% 0;

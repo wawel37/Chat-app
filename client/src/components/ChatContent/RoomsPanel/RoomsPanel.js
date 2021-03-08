@@ -1,12 +1,15 @@
-import react, {useState, useEffect} from 'react';
+import react, {useState, useEffect, useContext} from 'react';
 import axios from 'axios';
 import Button from 'react-bootstrap/Button';
 import { Link } from 'react-router-dom';
 import './RoomsPanel.css';
+import { SocketContext } from '../../../context/socket';
 
 
 
 export function RoomsPanel(){
+
+    const contextSocket = useContext(SocketContext);
 
     const [rooms, setRooms] = useState([]);
     const [link, setLink] = useState('/');

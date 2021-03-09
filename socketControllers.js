@@ -11,11 +11,13 @@ function socketConnection(io){
         //TODO caching
         socket.on('send post', (data) => {
 
+            const roomID = data.room.toString();
+
             const post = new Post({
                 user: data.user._id,
                 body: data.body,
                 date: data.date,
-                room: data.room
+                room: roomID
             });
             
             //Saving post and sending back the update
@@ -31,8 +33,13 @@ function socketConnection(io){
                 }
             }, function(err, result){
                 if(!err){
-                    io.emit('update posts', result.get);
+                    const toSend = {
+                        posts: result.get,
+                        roomID: roomID
+                    }
+                    return io.to(roomID).emit('update posts', toSend);
                 }
+                return console.log(err);
             });
         });
 

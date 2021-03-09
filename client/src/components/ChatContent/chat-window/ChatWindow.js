@@ -25,19 +25,21 @@ function ChatWindow(props){
         let isMounted = true;
 
         contextSocket.on('update posts', (data) => {
-            if(isMounted){
-                setPosts(data);
+            //We only update value when we are on the chat's page
+            if(isMounted && roomID == data.roomID){
+                setPosts(data.posts);
                 refAnchor.current.scrollIntoView();
             } 
         });
 
         const queryURL = '/posts/room/' + roomID;
 
-
-
         axios.get(queryURL)
         .then((res) =>{
-            if(isMounted) setPosts(res.data);
+            if(isMounted){
+                 setPosts(res.data);
+                 refAnchor.current.scrollIntoView();
+            }
             console.log(posts);
         })
         .catch((err) => {
@@ -51,7 +53,7 @@ function ChatWindow(props){
     function sendPost(e){
         e.preventDefault();
 
-        setMessage('');
+        
 
         const user = JSON.parse(localStorage.getItem('user'));
         let userName = 'none';
@@ -66,6 +68,8 @@ function ChatWindow(props){
         };
 
         contextSocket.emit('send post', toSend);
+
+        setMessage('');
     }
 
     return (

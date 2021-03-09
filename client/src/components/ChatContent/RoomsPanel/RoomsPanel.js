@@ -30,6 +30,8 @@ export function RoomsPanel(){
                 if(isMounted) setRooms([]);
                 console.log(err);
             });
+
+            contextSocket.emit('join rooms', user.data);
             
         }else{
             setLink('/');
